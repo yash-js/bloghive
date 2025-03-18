@@ -59,7 +59,7 @@ async function getData(userId: string, siteId: string) {
     return data
 }
 
-export default async function SitePage({ params }: { params: { siteId: string } }) {
+export default async function SitePage({ params }: { params: Promise<{ siteId: string }> }) {
 
     const { getUser } = getKindeServerSession()
 
@@ -69,7 +69,7 @@ export default async function SitePage({ params }: { params: { siteId: string } 
         return redirect('/api/auth/login')
     }
 
-    const data = await getData(user.id, params?.siteId)
+    const data = await getData(user.id, (await params)?.siteId)
 
     return (
         <>
@@ -81,7 +81,7 @@ export default async function SitePage({ params }: { params: { siteId: string } 
                     </Link>
                 </Button>
                 <Button asChild variant={'secondary'}>
-                    <Link href={`/dashboard/sites/${params.siteId}/settings`}>
+                    <Link href={`/dashboard/sites/${(await params).siteId}/settings`}>
                         <Settings
                             className="size-4 mr-2"
                         />
@@ -89,7 +89,7 @@ export default async function SitePage({ params }: { params: { siteId: string } 
                     </Link>
                 </Button>
                 <Button asChild>
-                    <Link href={`/dashboard/sites/${params.siteId}/create`}>
+                    <Link href={`/dashboard/sites/${(await params).siteId}/create`}>
                         <PlusCircle className="size-4 mr-2" />
                         Create an Article
                     </Link>
@@ -101,7 +101,7 @@ export default async function SitePage({ params }: { params: { siteId: string } 
                     title="You don&apos;t have any articles created."
                     buttonText="Create an Article"
                     description="You currently don&apos;t have any articles. Please create an article to get started."
-                    href={`/dashboard/sites/${params.siteId}/create`}
+                    href={`/dashboard/sites/${(await params).siteId}/create`}
                 />
             ) : (
                 <div className="">
@@ -137,7 +137,7 @@ export default async function SitePage({ params }: { params: { siteId: string } 
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {data?.posts.map(item => (
+                                    {data?.posts.map(async item => (
                                         <TableRow key={item.id}>
                                             <TableCell>
                                                 <Image
@@ -176,10 +176,10 @@ export default async function SitePage({ params }: { params: { siteId: string } 
                                                         </DropdownMenuLabel>
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem asChild>
-                                                            <Link href={`/dashboard/sites/${params.siteId}/${item.id}`}>Edit</Link>
+                                                            <Link href={`/dashboard/sites/${(await params).siteId}/${item.id}`}>Edit</Link>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem asChild>
-                                                            <Link href={`/dashboard/sites/${params.siteId}/${item.id}/delete`}>Delete</Link>
+                                                            <Link href={`/dashboard/sites/${(await params).siteId}/${item.id}/delete`}>Delete</Link>
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>

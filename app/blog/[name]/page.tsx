@@ -41,8 +41,8 @@ async function getData(subdirectory: string) {
     return data
 }
 
-async function Page({ params }: { params: { name: string } }) {
-    const subdirectory = params?.name
+async function Page({ params }: { params: Promise<{ name: string }> }) {
+    const subdirectory = (await params)?.name
     const data = await getData(subdirectory)
     return (
         <>
@@ -67,7 +67,7 @@ async function Page({ params }: { params: { name: string } }) {
             </nav>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-                {data.posts.map((item) => (
+                {data.posts.map(async (item) => (
                     <Card className="pt-0" key={item.id}>
                         <Image
                             src={item.image ?? DefaultImage}
@@ -85,7 +85,7 @@ async function Page({ params }: { params: { name: string } }) {
 
                         <CardFooter className="mt-auto">
                             <Button asChild className="w-full">
-                                <Link href={`/blog/${params.name}/${item.slug}`}>
+                                <Link href={`/blog/${(await params).name}/${item.slug}`}>
                                     Read More
                                 </Link>
                             </Button>

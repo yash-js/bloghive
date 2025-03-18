@@ -30,15 +30,19 @@ async function getData(slug: string) {
 
 }
 
-async function SlugPage({ params }: { params: { slug: string, name: string } }) {
+async function SlugPage({ params }: {
+    params: Promise<{
+        slug: string; name: string
+    }>
+}) {
 
-    const data = await getData(params.slug)
+    const data = await getData((await params)?.slug)
 
     return (
         <>
             <div className="flex items-center gap-x-2 pt-10 pb-5">
                 <Button variant={'outline'} size={'icon'} asChild className={'mr-3'}>
-                    <Link href={`/blog/${params.name}`}>
+                    <Link href={`/blog/${(await params).name}`}>
                         <ArrowLeft className="size-4" />
                     </Link>
                 </Button>

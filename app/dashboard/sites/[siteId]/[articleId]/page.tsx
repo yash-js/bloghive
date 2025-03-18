@@ -28,16 +28,16 @@ async function getData(postId: string) {
     return data
 }
 
-export default async function EditRoute({ params }: { params: { articleId: string, siteId: string } }) {
+export default async function EditRoute({ params }: { params: Promise<{ articleId: string, siteId: string }> }) {
 
 
-    const data = await getData(await params?.articleId)
+    const data = await getData(await (await params)?.articleId)
 
     return (
         <div className="">
             <div className="flex items-center ">
                 <Button variant={'outline'} size='icon' asChild className="mr-3">
-                    <Link href={`/dashboard/sites/${params?.siteId}`}>
+                    <Link href={`/dashboard/sites/${(await params)?.siteId}`}>
                         <ArrowLeft
                             className="size-4"
                         />
@@ -45,7 +45,7 @@ export default async function EditRoute({ params }: { params: { articleId: strin
                 </Button>
                 <h1 className="text-2xl font-semibold">Edit Article</h1>
             </div>
-            <EditArticleForm data={data} siteId={params?.siteId} />
+            <EditArticleForm data={data} siteId={(await params)?.siteId} />
         </div>
     )
 }
