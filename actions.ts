@@ -222,8 +222,8 @@ export async function CreateSubscription() {
                 price: process.env.STRIPE_PRICE_ID, quantity: 1
             }
         ],
-        success_url: 'http://localhost:3000/dashboard/payment/success',
-        cancel_url: "http://localhost:3000/dashboard/payment/cancelled"
+        success_url: `${process.env.CLIENT_URL}/dashboard/payment/success`,
+        cancel_url: `${process.env.CLIENT_URL}/dashboard/payment/cancelled`
     })
 
     return redirect(session.url as string)

@@ -29,6 +29,6 @@ export async function GET() {
         })
     }
 
-    return NextResponse.redirect('http://localhost:3000/dashboard')
+    return NextResponse.redirect(`${process.env.CLIENT_URL}/dashboard`)
 
 }
